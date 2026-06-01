@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DotLock - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toast" class="toast-notification"></div>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <span id="user-welcome" class="user-welcome">Welcome</span>
+            <div class="header-actions">
+                <button id="btn-add-trigger" class="btn-add-trigger">+ Add</button>
+                <button id="btn-logout" class="btn-logout">📴</button>
+            </div>
+        </div>
+
+        <div id="add-form" class="add-form-box" style="display: none;">
+            <span class="field-label required">* Account Name</span>
+            <input type="text" id="site" placeholder="e.g. Netflix, Google...">
+            
+            <span class="field-label optional">(Optional) Email Address / Username</span>
+            <input type="text" id="email" placeholder="e.g. user@mail.com">
+            
+            <span class="field-label required">* Password</span>
+            <input type="password" id="password" placeholder="Enter password">
+            
+            <button id="btn-enregistrer" class="btn-save">Save Password</button>
+        </div>
+
+        <div class="passwords-list" id="passwords-display">
+            </div>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
