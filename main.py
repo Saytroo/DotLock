@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # === CONNEXION SUPABASE ===
-DATABASE_URL = "postgresql://postgres:R%40glisse2912@db.okfudbtuuaedqwnufsez.supabase.co:5432/postgres"
+DATABASE_URL = "postgresql://postgres.okfudbtuuaedqwnufsez:R%40glisse2912@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
 
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
