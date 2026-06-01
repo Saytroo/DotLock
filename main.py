@@ -1,10 +1,14 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import sqlite3
 import bcrypt
 
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,7 +18,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_NAME = "dotlock.db"
+
+DB_DIR = "/data" if os.path.exists("/data") else "."
+DB_NAME = os.path.join(DB_DIR, "dotlock.db")
+
+
+
+
+@app.get("/", response_class=HTMLResponse)
+async def read_index():
+    with open("auth.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def read_dashboard():
+    with open("dashboard.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
+app.mount("/static", StaticFiles(directory="."), name="static")
+
+
+
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
@@ -28,7 +54,7 @@ def init_db():
     )
     """)
     
-    # AJOUT DE LA COLONNE EMAIL DANS LA TABLE VAULT
+    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS vault (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,7 +74,7 @@ class AuthModel(BaseModel):
     username: str
     master_password: str
 
-# LE FIX DU SCHÉMA : Intégration de l'email optionnel
+
 class PasswordModel(BaseModel):
     username: str  
     acc_name: str
@@ -108,7 +134,7 @@ def save_password(data: PasswordModel):
     
     user_id = user[0]
     
-    # SAUVEGARDE AVEC L'EMAIL OPTIONNEL
+
     cursor.execute(
         "INSERT INTO vault (user_id, acc_name, email, stored_password) VALUES (?, ?, ?, ?)",
         (user_id, data.acc_name, data.email, data.password)
@@ -132,7 +158,7 @@ def get_passwords(username: str):
     
     user_id = user[0]
     
-    # RÉCUPÉRATION DE LA COLONNE EMAIL
+
     cursor.execute("SELECT acc_name, email, stored_password FROM vault WHERE user_id = ?", (user_id,))
     rows = cursor.fetchall()
     conn.close()
